@@ -58,7 +58,7 @@ class proceso {
         this.tentroP = 0;
         this.tterminaP = 0;
         this.entrop = true;
-        this.finp = true;
+        this.finp = false;
         this.tejecucion = 0;
     }
 }
@@ -240,6 +240,7 @@ class AppComponent {
         this.tiemporestante = 0;
         this.tituloejecucion = "";
         this.auxpro = false;
+        this.fin = false;
     }
     onProcesoCreado($event) {
         this.arrprocesos.push($event);
@@ -296,6 +297,7 @@ class AppComponent {
                 }
                 else {
                     this.arrprocesos[this.arrprocesos.findIndex(proceso => proceso.titulo === this.tituloejecucion)].tterminaP = this.time + 100;
+                    this.arrprocesos[this.arrprocesos.findIndex(proceso => proceso.titulo === this.tituloejecucion)].finp = true;
                     this.prorun = new _models_proceso_nodel__WEBPACK_IMPORTED_MODULE_0__["proceso"]();
                     this.timeq = 0;
                     this.procesando = false;
@@ -305,7 +307,7 @@ class AppComponent {
                 console.log(this.procesando);
                 this.tiemporestante = 0;
                 this.tituloejecucion = "";
-                if (this.arrProCol[0].titulo != "") {
+                if (this.arrProCol[0]) {
                     this.prorun = this.arrProCol[0];
                     this.arrProCol.shift();
                     this.tituloejecucion = this.prorun.titulo;
@@ -321,7 +323,22 @@ class AppComponent {
                 }
             }
             this.time += 100;
+            this.valfin();
+            if (this.fin) {
+                clearInterval(interval);
+            }
         }, 1000);
+    }
+    valfin() {
+        let numfin = 0;
+        for (let index = 0; index < this.arrprocesos.length; index++) {
+            if (this.arrprocesos[index].finp) {
+                numfin += 1;
+            }
+        }
+        if (numfin === this.arrprocesos.length) {
+            this.fin = true;
+        }
     }
 }
 AppComponent.ɵfac = function AppComponent_Factory(t) { return new (t || AppComponent)(); };
